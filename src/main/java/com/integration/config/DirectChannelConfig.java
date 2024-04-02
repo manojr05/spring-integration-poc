@@ -10,27 +10,14 @@ import org.springframework.integration.dsl.IntegrationFlow;
 import org.springframework.integration.http.dsl.Http;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
+import org.springframework.messaging.MessagingException;
 
 import java.util.function.Function;
 
 @Slf4j
 @Configuration
 @EnableIntegration
-public class IntegrationConfig {
-
-    @Bean
-    public IntegrationFlow httpFlow(){
-        return IntegrationFlow.from(Http.inboundGateway("/demo")
-                .requestMapping(r -> r.methods(HttpMethod.POST))
-                .requestPayloadType(String.class))
-                .handle(handler())
-                .get();
-    }
-
-    @Bean
-    public Function<Message<?>, String> handler(){
-        return message -> "ok";
-    }
+public class DirectChannelConfig {
 
     @Bean
     public MessageChannel directChannel(){
@@ -38,11 +25,24 @@ public class IntegrationConfig {
     }
 
     @Bean
-    public IntegrationFlow directFlow(){
-        return IntegrationFlow.from("directChannel")
-                .handle(message -> log.info((String) message.getPayload()))
+    public IntegrationFlow directChannelHttpFlow(){
+        return IntegrationFlow.from(Http.inboundGateway("/directChannel")
+                .requestMapping(r -> r.methods(HttpMethod.POST))
+                .requestPayloadType(String.class))
+                .channel("directChannel")
+                .handle(directChannelHttpFlowHandler())
                 .get();
     }
 
+    @Bean
+    public Function<Message<?>, String> directChannelHttpFlowHandler() {
+        return new Function<Message<?>, String>() {
+            public String apply(Message<?> message) throws MessagingException {
+                log.info("Received message: {}", message.getPayload());
+                return "OK";
+            }
+        };
+
+    }
 }
 
