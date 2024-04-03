@@ -1,11 +1,11 @@
-package com.integration.config.transformers;
+package com.integration.config.routers;
 
+import com.integration.model.Employee;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.integration.channel.DirectChannel;
-import org.springframework.integration.channel.PublishSubscribeChannel;
 import org.springframework.integration.config.EnableIntegration;
 import org.springframework.integration.dsl.IntegrationFlow;
 import org.springframework.integration.http.dsl.Http;
@@ -19,6 +19,11 @@ import java.util.function.Function;
 @Configuration
 @EnableIntegration
 public class RoutingConfig {
+
+    @Bean
+    public Employee employee(){
+        return new Employee();
+    }
 
     @Bean
     public MessageChannel defaultChannel(){
