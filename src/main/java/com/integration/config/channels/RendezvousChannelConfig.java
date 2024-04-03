@@ -3,7 +3,6 @@ package com.integration.config.channels;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.integration.annotation.MessagingGateway;
 import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.integration.channel.RendezvousChannel;
 import org.springframework.integration.config.EnableIntegration;
@@ -25,6 +24,5 @@ public class RendezvousChannelConfig {
         log.info("Received payload form rendezvousChannel: {}", payload);
         return "OK";
     }
-
 
 }
